@@ -1,0 +1,128 @@
+.articlePage {
+  width: 100%;
+  min-height: 100%;
+  padding: 2rem 0;
+}
+
+.articlePage .container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.article {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f7fafc;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.author,
+.date {
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.content {
+  margin-bottom: 2rem;
+  line-height: 1.8;
+  color: #4a5568;
+  font-size: 1.125rem;
+}
+
+.footer {
+  padding-top: 1rem;
+  border-top: 2px solid #f7fafc;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.likeButton,
+.shareButton {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+}
+
+.likeButton:hover {
+  background: #fed7d7;
+  border-color: #fc8181;
+}
+
+.shareButton:hover {
+  background: #bee3f8;
+  border-color: #63b3ed;
+}
+
+.comments {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.commentsTitle {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.commentsPlaceholder {
+  padding: 2rem;
+  background: #f7fafc;
+  border-radius: 8px;
+  text-align: center;
+  color: #718096;
+}
+
+@media (max-width: 768px) {
+  .articlePage {
+    padding: 1rem 0;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .article {
+    padding: 2rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .content {
+    font-size: 1rem;
+  }
+} 
