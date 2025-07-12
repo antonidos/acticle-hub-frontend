@@ -157,20 +157,3 @@ input:focus, textarea:focus, select:focus {
   h3 { font-size: 1.25rem; }
 }
 
-/* Скроллбар */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--gray-100);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--gray-300);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-400);
-}
