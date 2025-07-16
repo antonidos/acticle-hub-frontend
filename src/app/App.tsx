@@ -6,6 +6,7 @@ import RegisterPage from '@pages/register/RegisterPage';
 import ArticlePage from '@pages/article/ArticlePage';
 import CreateArticlePage from '@pages/create-article/CreateArticlePage';
 import ProfilePage from '@pages/profile/ProfilePage';
+import NotFoundPage from '@pages/404/NotFoundPage';
 import { useAppSelector } from '@shared/lib/hooks';
 import { selectIsAuthenticated } from '@features/auth/model/selectors';
 import RouterProvider from './providers/RouterProvider';
@@ -34,6 +35,7 @@ function App() {
               isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Layout>
     </RouterProvider>

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './HomePage.module.css';
+import ArticlesList from '@widgets/acticles-list/ActiclesList';
 
 const HomePage: React.FC = () => {
   return (
@@ -16,9 +17,7 @@ const HomePage: React.FC = () => {
       <section className={styles.articles}>
         <h2 className={styles.sectionTitle}>Последние статьи</h2>
         <div className={styles.articleGrid}>
-          <div className={styles.placeholder}>
-            <p>Статьи будут отображаться здесь</p>
-          </div>
+          <ArticlesList />
         </div>
       </section>
     </div>

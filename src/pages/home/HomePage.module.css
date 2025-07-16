@@ -46,24 +46,12 @@
 }
 
 .articleGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
 }
 
-.placeholder {
-  padding: 4rem 2rem;
-  background: #f7fafc;
-  border-radius: 12px;
-  border: 2px dashed #cbd5e0;
-  text-align: center;
-  color: #718096;
-}
-
 @media (max-width: 768px) {
-  .homePage {
-    padding: 1rem;
-  }
 
   .hero {
     padding: 2rem 1rem;
