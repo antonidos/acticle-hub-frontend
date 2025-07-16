@@ -6,39 +6,31 @@ import type {
   LoginCredentials,
   RegisterCredentials,
 } from '../types';
-
-// Моковые данные для разработки
-const mockUser: User = {
-  id: '1',
-  email: 'user@example.com',
-  name: 'Пользователь',
-  avatar: '',
-  createdAt: new Date().toISOString(),
-};
+import { authApi, ApiError, apiClient } from './api';
 
 const initialState: AuthState = {
   user: null,
+  token: null,
   isAuthenticated: false,
   loading: false,
   error: null,
+  isInitialized: false,
 };
 
-// Асинхронные thunks для API вызовов
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await authApi.login(credentials);
 
-      if (
-        credentials.email === mockUser.email &&
-        credentials.password === 'password'
-      ) {
-        return mockUser;
-      } else {
-        throw new Error('Неверный email или пароль');
+      const { user, token } = response;
+
+      if (token) {
+        apiClient.setAuthToken(token);
+        localStorage.setItem('token', token);
       }
+
+      return { user, token };
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Ошибка авторизации'
@@ -51,23 +43,20 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (credentials: RegisterCredentials, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await authApi.register(credentials);
 
-      if (credentials.password !== credentials.confirmPassword) {
-        throw new Error('Пароли не совпадают');
+      const { user, token } = response;
+
+      if (token) {
+        apiClient.setAuthToken(token);
+        localStorage.setItem('token', token);
       }
 
-      const newUser: User = {
-        id: Date.now().toString(),
-        email: credentials.email,
-        name: credentials.name,
-        avatar: '',
-        createdAt: new Date().toISOString(),
-      };
-
-      return newUser;
+      return { user, token };
     } catch (error) {
+      if (error instanceof ApiError) {
+        return rejectWithValue(error.message);
+      }
       return rejectWithValue(
         error instanceof Error ? error.message : 'Ошибка регистрации'
       );
@@ -75,16 +64,19 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk(
-  'auth/logout',
+export const verifyToken = createAsyncThunk(
+  'auth/verify-token',
   async (_, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
-      await new Promise(resolve => setTimeout(resolve, 500));
-      return true;
+      const response = await authApi.verify();
+
+      return response;
     } catch (error) {
+      apiClient.clearAuthToken();
+      localStorage.removeItem('token');
+
       return rejectWithValue(
-        error instanceof Error ? error.message : 'Ошибка выхода'
+        error instanceof Error ? error.message : 'Ошибка проверки токена'
       );
     }
   }
@@ -100,25 +92,47 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
+      state.isInitialized = true;
+    },
+    restoreAuth: (
+      state,
+      action: PayloadAction<{ user: User; token: string }>
+    ) => {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+      state.isInitialized = true;
+      apiClient.setAuthToken(action.payload.token);
+    },
+    logout: state => {
+      state.user = null;
+      state.token = null;
+      state.isAuthenticated = false;
+      state.isInitialized = true;
+      apiClient.clearAuthToken();
+      localStorage.removeItem('token');
     },
   },
   extraReducers: builder => {
     builder
-      // Login
       .addCase(loginUser.pending, state => {
         state.loading = true;
         state.error = null;
+        state.isInitialized = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
         state.error = null;
+        state.isInitialized = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
+        state.isInitialized = true;
       })
       // Register
       .addCase(registerUser.pending, state => {
@@ -127,31 +141,38 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token || null;
         state.isAuthenticated = true;
         state.error = null;
+        state.isInitialized = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
+        state.isInitialized = true;
       })
-      // Logout
-      .addCase(logoutUser.pending, state => {
+      // Verify token
+      .addCase(verifyToken.pending, state => {
         state.loading = true;
-      })
-      .addCase(logoutUser.fulfilled, state => {
-        state.loading = false;
-        state.user = null;
-        state.isAuthenticated = false;
         state.error = null;
       })
-      .addCase(logoutUser.rejected, (state, action) => {
+      .addCase(verifyToken.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.error = null;
+        state.isInitialized = true;
+      })
+      .addCase(verifyToken.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        state.isAuthenticated = false;
+        state.isInitialized = true;
       });
   },
 });
 
-export const { clearError, setUser } = authSlice.actions;
+export const { clearError, setUser, restoreAuth, logout } = authSlice.actions;
 export default authSlice.reducer;

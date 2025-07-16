@@ -2,20 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { UsersState, User } from '../types';
 
-// Моковые данные для разработки
 const mockUsers: User[] = [
   {
     id: '1',
     email: 'author@example.com',
-    name: 'Автор Статьи',
-    avatar: '',
+    username: 'Автор Статьи',
+    avatarUrl: '',
     createdAt: '2024-01-01T00:00:00Z',
   },
   {
     id: '2',
     email: 'user@example.com',
-    name: 'Пользователь',
-    avatar: '',
+    username: 'Пользователь',
+    avatarUrl: '',
     createdAt: '2024-01-02T00:00:00Z',
   },
 ];
@@ -26,12 +25,10 @@ const initialState: UsersState = {
   error: null,
 };
 
-// Асинхронные thunks для API вызовов
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async (_, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
       await new Promise(resolve => setTimeout(resolve, 800));
       return mockUsers;
     } catch (error) {
@@ -46,7 +43,6 @@ export const fetchUserById = createAsyncThunk(
   'users/fetchUserById',
   async (id: string, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
       await new Promise(resolve => setTimeout(resolve, 500));
       const user = mockUsers.find(user => user.id === id);
 
@@ -67,7 +63,6 @@ export const updateUserProfile = createAsyncThunk(
   'users/updateUserProfile',
   async (userData: Partial<User> & { id: string }, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const updatedUser: User = {

@@ -1,17 +1,14 @@
-// Типы для пользователя
 export interface User {
   id: string;
   email: string;
-  name: string;
-  avatar?: string;
-  createdAt: string;
+  username: string;
+  avatarUrl?: string;
+  createdAt?: string;
 }
 
-// Типы для статьи
 export interface Article {
   id: string;
   title: string;
-  description: string;
   content: string;
   author: User;
   createdAt: string;
@@ -20,15 +17,15 @@ export interface Article {
   isLiked: boolean;
 }
 
-// Типы для аутентификации
 export interface AuthState {
   user: User | null;
+  token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  isInitialized: boolean;
 }
 
-// Типы для статей
 export interface ArticlesState {
   articles: Article[];
   currentArticle: Article | null;
@@ -36,24 +33,21 @@ export interface ArticlesState {
   error: string | null;
 }
 
-// Типы для пользователей
 export interface UsersState {
   users: User[];
   loading: boolean;
   error: string | null;
 }
 
-// Типы для форм
 export interface LoginCredentials {
   email: string;
   password: string;
 }
 
 export interface RegisterCredentials {
-  name: string;
+  username: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 export interface CreateArticleData {
@@ -62,14 +56,25 @@ export interface CreateArticleData {
   content: string;
 }
 
-// Типы для API ответов
+export type RegistrationForm = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export type LoginForm = {
+  email: string;
+  password: string;
+};
+
 export interface ApiResponse<T> {
   data: T;
   message: string;
   success: boolean;
 }
 
-export interface ApiError {
+export interface ApiErrorResponse {
   message: string;
   status: number;
 }

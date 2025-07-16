@@ -4,7 +4,6 @@ import inquirer from 'inquirer';
 import { execSync } from 'child_process';
 import { exit } from 'process';
 
-// Типы коммитов согласно Conventional Commits
 const COMMIT_TYPES = [
   {
     name: '✨ feat: Новая функциональность',
@@ -53,7 +52,6 @@ const COMMIT_TYPES = [
   }
 ];
 
-// Проверка статуса git
 function getGitStatus() {
   try {
     const status = execSync('git status --porcelain', { encoding: 'utf8' });
@@ -73,7 +71,6 @@ function getGitStatus() {
   }
 }
 
-// Проверка наличия изменений
 function checkForChanges() {
   const status = getGitStatus();
   
@@ -91,7 +88,6 @@ function checkForChanges() {
   return status;
 }
 
-// Добавление файлов
 async function addFiles(status) {
   if (status.staged === 0 && (status.unstaged > 0 || status.untracked > 0)) {
     const { shouldAdd } = await inquirer.prompt([
@@ -114,17 +110,13 @@ async function addFiles(status) {
   }
 }
 
-// Основная функция
 async function main() {
   console.log('🚀 Умный коммит\n');
   
-  // Проверяем изменения
   const status = checkForChanges();
   
-  // Добавляем файлы если нужно
   await addFiles(status);
   
-  // Запрашиваем тип коммита
   const { type } = await inquirer.prompt([
     {
       type: 'list',
@@ -135,7 +127,6 @@ async function main() {
     }
   ]);
   
-  // Запрашиваем сообщение коммита
   const { message } = await inquirer.prompt([
     {
       type: 'input',
@@ -153,7 +144,6 @@ async function main() {
     }
   ]);
   
-  // Опциональное расширенное описание
   const { description } = await inquirer.prompt([
     {
       type: 'input',
@@ -162,13 +152,11 @@ async function main() {
     }
   ]);
   
-  // Формируем полное сообщение коммита
   let fullMessage = `${type}: ${message}`;
   if (description.trim()) {
     fullMessage += `\n\n${description}`;
   }
   
-  // Подтверждение
   console.log('\n📝 Сообщение коммита:');
   console.log(`"${fullMessage}"`);
   
@@ -196,13 +184,11 @@ async function main() {
   }
 }
 
-// Обработка ошибок
 process.on('SIGINT', () => {
   console.log('\n❌ Коммит отменен');
   exit(0);
 });
 
-// Запуск
 main().catch(error => {
   console.error('❌ Неожиданная ошибка:', error.message);
   exit(1);

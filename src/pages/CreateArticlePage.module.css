@@ -130,21 +130,21 @@
   .createArticlePage {
     padding: 1rem 0;
   }
-  
+
   .container {
     padding: 0 1rem;
   }
-  
+
   .formContainer {
     padding: 2rem;
   }
-  
+
   .actions {
     flex-direction: column;
   }
-  
+
   .cancelButton,
   .submitButton {
     width: 100%;
   }
-} 
+}

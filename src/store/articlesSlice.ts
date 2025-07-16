@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { ArticlesState, Article, CreateArticleData, User } from '../types';
 
-// Моковые данные для разработки
 const mockAuthor: User = {
   id: '1',
   email: 'author@example.com',
-  name: 'Автор Статьи',
-  avatar: '',
+  username: 'Автор Статьи',
+  avatarUrl: '',
   createdAt: '2024-01-01T00:00:00Z',
 };
 
@@ -14,7 +13,6 @@ const mockArticles: Article[] = [
   {
     id: '1',
     title: 'Введение в React',
-    description: 'Основы работы с React для начинающих',
     content: 'Подробное руководство по React...',
     author: mockAuthor,
     createdAt: '2024-01-15T10:00:00Z',
@@ -25,7 +23,6 @@ const mockArticles: Article[] = [
   {
     id: '2',
     title: 'Redux Toolkit Guide',
-    description: 'Современный подход к управлению состоянием',
     content: 'Как использовать Redux Toolkit...',
     author: mockAuthor,
     createdAt: '2024-01-14T14:30:00Z',
@@ -42,7 +39,6 @@ const initialState: ArticlesState = {
   error: null,
 };
 
-// Асинхронные thunks для API вызовов
 export const fetchArticles = createAsyncThunk(
   'articles/fetchArticles',
   async (_, { rejectWithValue }) => {
@@ -62,7 +58,6 @@ export const fetchArticleById = createAsyncThunk(
   'articles/fetchArticleById',
   async (id: string, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
       await new Promise(resolve => setTimeout(resolve, 500));
       const article = mockArticles.find(article => article.id === id);
 
@@ -83,13 +78,11 @@ export const createArticle = createAsyncThunk(
   'articles/createArticle',
   async (articleData: CreateArticleData, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const newArticle: Article = {
         id: Date.now().toString(),
         title: articleData.title,
-        description: articleData.description,
         content: articleData.content,
         author: mockAuthor,
         createdAt: new Date().toISOString(),
@@ -111,7 +104,6 @@ export const toggleLike = createAsyncThunk(
   'articles/toggleLike',
   async (articleId: string, { rejectWithValue }) => {
     try {
-      // Моковая реализация - заменить на реальный API
       await new Promise(resolve => setTimeout(resolve, 300));
       return articleId;
     } catch (error) {
