@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { articlesApi } from '../api/articlesApi';
 import { ArticlesState, CreateArticleData } from './types';
+import { ValidationError } from '@shared/api/baseApi';
 
 const initialState: ArticlesState = {
   articles: [],
@@ -46,6 +47,10 @@ export const createArticle = createAsyncThunk(
 
       return response.article;
     } catch (error) {
+      console.log(error);
+      if (error instanceof ValidationError) {
+        return rejectWithValue(error.message + ': ' + error.errors[0].message);
+      }
       return rejectWithValue(
         error instanceof Error ? error.message : 'Ошибка создания статьи'
       );

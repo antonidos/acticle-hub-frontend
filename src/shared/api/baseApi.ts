@@ -74,6 +74,14 @@ class ApiClient {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        if (errorData.errors) {
+          throw new ValidationError({
+            message: errorData.message || `HTTP Error: ${response.status}`,
+            status: response.status,
+            errors: errorData.errors,
+          });
+        }
+
         throw new ApiError({
           message: errorData.message || `HTTP Error: ${response.status}`,
           status: response.status,
@@ -82,6 +90,10 @@ class ApiClient {
 
       return await response.json();
     } catch (error) {
+      if (error instanceof ValidationError) {
+        throw error;
+      }
+
       if (error instanceof ApiError) {
         throw error;
       }
@@ -134,5 +146,25 @@ class ApiError extends Error {
   }
 }
 
+class ValidationError extends Error {
+  status: number;
+  errors: { field: string; message: string }[];
+
+  constructor({
+    message,
+    status,
+    errors,
+  }: {
+    message: string;
+    status: number;
+    errors: { field: string; message: string }[];
+  }) {
+    super(message);
+    this.name = 'ValidationError';
+    this.status = status;
+    this.errors = errors;
+  }
+}
+
 export const apiClient = new ApiClient(API_BASE_URL);
-export { ApiError };
+export { ApiError, ValidationError };

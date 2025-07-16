@@ -1,4 +1,5 @@
-import { LoginForm, RegistrationForm } from '../types';
+import { ArticleForm } from '@features/articles/model/types';
+import { LoginForm, RegistrationForm } from '@features/auth/model/types';
 
 export type ValidationErrors<T> = Partial<T>;
 
@@ -52,5 +53,28 @@ export const validateLoginForm = (
   return {
     email: validateEmail(email),
     password: validatePassword(password),
+  };
+};
+
+export const validateTitle = (value: string): string | undefined => {
+  if (!value?.trim()) return 'Заголовок статьи не может быть пустым';
+  if (value.length < 3)
+    return 'Заголовок статьи должен содержать минимум 3 символа';
+  return undefined;
+};
+
+export const validateContent = (value: string): string | undefined => {
+  if (!value?.trim()) return 'Содержание статьи не может быть пустым';
+  return undefined;
+};
+
+export const validateArticleForm = (
+  form: ArticleForm
+): ValidationErrors<ArticleForm> => {
+  const { title, content } = form;
+
+  return {
+    title: validateTitle(title),
+    content: validateContent(content),
   };
 };

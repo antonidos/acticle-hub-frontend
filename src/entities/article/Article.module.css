@@ -7,6 +7,11 @@
   background-color: #f0f0f0;
   height: 100px;
   align-items: center;
+	margin-bottom: 1rem;
+}
+
+.article:last-child {
+	margin-bottom: 0;
 }
 
 .author {
@@ -14,7 +19,9 @@
   align-items: center;
   gap: 10px;
   margin: 0 15px;
+	min-width: 120px;
 }
+
 
 .divider {
   width: 1px;

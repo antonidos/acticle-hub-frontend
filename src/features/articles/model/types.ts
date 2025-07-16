@@ -39,3 +39,8 @@ export interface ArticlesState {
   loading: boolean;
   error: string | null;
 }
+
+export interface ArticleForm {
+  title: string;
+  content: string;
+}
