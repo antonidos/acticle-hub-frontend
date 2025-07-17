@@ -30,7 +30,7 @@ function App() {
           <Route path="/article/:id" element={<ArticlePage />} />
           <Route path="/create" element={<CreateArticlePage />} />
           <Route
-            path="/profile"
+            path="/profile/:id"
             element={
               isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />
             }

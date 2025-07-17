@@ -3,11 +3,15 @@ import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 import { logout } from '../../features/auth/model/authSlice';
 import { useAppDispatch, useAppSelector } from '@shared/lib/hooks';
-import { selectIsAuthenticated } from '@features/auth/model/selectors';
+import {
+  selectId,
+  selectIsAuthenticated,
+} from '@features/auth/model/selectors';
 
 const Header: React.FC = () => {
   const isAuth = useAppSelector(selectIsAuthenticated);
   const dispatch = useAppDispatch();
+  const userId = useAppSelector(selectId);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -30,7 +34,7 @@ const Header: React.FC = () => {
         </nav>
         {isAuth ? (
           <div className={styles.authLinks}>
-            <Link to="/profile" className={styles.authLink}>
+            <Link to={`/profile/${userId}`} className={styles.authLink}>
               Профиль
             </Link>
             <a className={styles.authButton} onClick={handleLogout}>
