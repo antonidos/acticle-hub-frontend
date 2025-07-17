@@ -69,6 +69,12 @@ class ApiClient {
       ...options,
     };
 
+    if (options.body instanceof FormData) {
+      const headers = { ...config.headers };
+      delete (headers as Record<string, string>)['Content-Type'];
+      config.headers = headers;
+    }
+
     try {
       const response = await fetch(url, config);
 
@@ -108,7 +114,7 @@ class ApiClient {
   async post<T>(endpoint: string, data: unknown): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: data instanceof FormData ? data : JSON.stringify(data),
     });
   }
 

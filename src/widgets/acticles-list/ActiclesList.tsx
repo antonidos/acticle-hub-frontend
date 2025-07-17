@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@shared/lib/hooks';
 import { fetchArticles } from '@features/articles/model/articlesSlice';
 import { selectAllArticles } from '@features/articles/model/selectors';
-import { Article } from '@entities/article';
+import { Article } from '@entities/article-list';
 
 const ActiclesList: FC = () => {
   const dispatch = useAppDispatch();

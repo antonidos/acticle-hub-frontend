@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './HomePage.module.css';
-import ArticlesList from '@widgets/acticles-list/ActiclesList';
+import ArticlesList from '@widgets/acticles-list';
 
 const HomePage: React.FC = () => {
   return (
