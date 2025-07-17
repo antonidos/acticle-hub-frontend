@@ -1,5 +1,3 @@
-import { User } from '@features/users/model/types';
-
 export interface RegisterCredentials {
   username: string;
   email: string;
@@ -12,8 +10,8 @@ export interface LoginCredentials {
 }
 
 export interface AuthState {
-  user: User | null;
   token: string | null;
+  id: number | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;

@@ -1,17 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { UsersState, User } from './types';
+import type { UsersState } from './types';
+import { User } from '@shared/types';
 
 const mockUsers: User[] = [
   {
-    id: '1',
+    id: 1,
     email: 'author@example.com',
     username: 'Автор Статьи',
     avatarUrl: '',
     createdAt: '2024-01-01T00:00:00Z',
   },
   {
-    id: '2',
+    id: 2,
     email: 'user@example.com',
     username: 'Пользователь',
     avatarUrl: '',
@@ -41,7 +42,7 @@ export const fetchUsers = createAsyncThunk(
 
 export const fetchUserById = createAsyncThunk(
   'users/fetchUserById',
-  async (id: string, { rejectWithValue }) => {
+  async (id: number, { rejectWithValue }) => {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
       const user = mockUsers.find(user => user.id === id);

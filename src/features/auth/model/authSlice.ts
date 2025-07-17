@@ -2,13 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from '../api/authApi';
 import { apiClient } from '@shared/api/baseApi';
-import { User } from '@features/users/model/types';
 import { AuthState, LoginCredentials, RegisterCredentials } from './types';
 import { ApiError } from '@shared/api/baseApi';
 
 const initialState: AuthState = {
-  user: null,
   token: null,
+  id: null,
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -21,14 +20,14 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await authApi.login(credentials);
 
-      const { user, token } = response;
+      const { id, token } = response;
 
       if (token) {
         apiClient.setAuthToken(token);
         localStorage.setItem('token', token);
       }
 
-      return { user, token };
+      return { id, token };
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Ошибка авторизации'
@@ -43,14 +42,14 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await authApi.register(credentials);
 
-      const { user, token } = response;
+      const { id, token } = response;
 
       if (token) {
         apiClient.setAuthToken(token);
         localStorage.setItem('token', token);
       }
 
-      return { user, token };
+      return { id, token };
     } catch (error) {
       if (error instanceof ApiError) {
         return rejectWithValue(error.message);
@@ -87,24 +86,15 @@ const authSlice = createSlice({
     clearError: state => {
       state.error = null;
     },
-    setUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload;
-      state.isAuthenticated = true;
-      state.isInitialized = true;
-    },
-    restoreAuth: (
-      state,
-      action: PayloadAction<{ user: User; token: string }>
-    ) => {
-      state.user = action.payload.user;
+    restoreAuth: (state, action: PayloadAction<{ token: string }>) => {
       state.token = action.payload.token;
       state.isAuthenticated = true;
       state.isInitialized = true;
       apiClient.setAuthToken(action.payload.token);
     },
     logout: state => {
-      state.user = null;
       state.token = null;
+      state.id = null;
       state.isAuthenticated = false;
       state.isInitialized = true;
       apiClient.clearAuthToken();
@@ -120,8 +110,8 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
         state.token = action.payload.token;
+        state.id = action.payload.id;
         state.isAuthenticated = true;
         state.error = null;
         state.isInitialized = true;
@@ -139,8 +129,8 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
         state.token = action.payload.token || null;
+        state.id = action.payload.id;
         state.isAuthenticated = true;
         state.error = null;
         state.isInitialized = true;
@@ -158,7 +148,7 @@ const authSlice = createSlice({
       })
       .addCase(verifyToken.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        state.id = action.payload.userId;
         state.isAuthenticated = true;
         state.error = null;
         state.isInitialized = true;
@@ -172,5 +162,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, setUser, restoreAuth, logout } = authSlice.actions;
+export const { clearError, restoreAuth, logout } = authSlice.actions;
 export default authSlice.reducer;
